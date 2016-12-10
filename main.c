@@ -15,11 +15,12 @@
 #include "i2c.h"
 #include "display.h"
 #include "extrafunct.h"
+//#include "Color-convert.c"
 
 /* Color sensor values */
 #define TCS34725_ADDRESS 0x29 // Device address
 #define TCS34725_INTEGRATIONTIME_700MS 0x00 // Integration time 700 ms
-#define TCS34725_GAIN_1X 0x00 // Gain 1x
+#define TCS34725_GAIN_4X 0x01 // Gain 4x
 #define TCS34725_ID 0x12 // Device ID
 #define TCS34725_COMMAND_BIT 0x80 // Command bit
 #define TCS34725_ENABLE 0x00 // Enable sensor
@@ -103,10 +104,10 @@ bool start_sensor() {
   delay(10000);
 
   set_integration_time(TCS34725_INTEGRATIONTIME_700MS);
-  set_gain(TCS34725_GAIN_1X);
+  set_gain(TCS34725_GAIN_4X);
 
   enable_sensor();
-  read8(TCS34725_ENABLE);
+
   return true; 
 }
 
@@ -243,14 +244,18 @@ void loop(void) {
     uint8_t r = normalize_color(red, sum);
     uint8_t g = normalize_color(green, sum);
     uint8_t b = normalize_color(blue, sum);
+
+    char* name = (char*) findColor(r, g, b);
+
+    display_string(1, name); 
   
-    char* r_str = itoaconv(r);
+    /*char* r_str = itoaconv(r);
     char* g_str = itoaconv(g);
     char* b_str = itoaconv(b);
 
     display_string(1, r_str);
     display_string(2, g_str);
-    display_string(3, b_str);
+    display_string(3, b_str);*/
     display_update();
   }
 }
@@ -263,6 +268,7 @@ int main(void) {
   setup_i2c();
   setup_timer();
   display_init();
+  fill_colorList();
 
   if (start_sensor()) {
     display_string(0, "Found sensor");
