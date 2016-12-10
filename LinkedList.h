@@ -6,30 +6,30 @@
 // Author: Carl Leijonberg
 
 typedef struct colorList {
-	double l1;
-	double a1;
-	double b1;
+	int r;
+	int g;
+	int b;
 	struct colorList *next;
-	char *key;
+	char *name;
 } ColorList;
 
 ColorList *first_node = NULL;
 ColorList *last_node = NULL;
 
-ColorList *create_new_colorList(char key[], double l1,double a1, double b1) {
+ColorList *create_new_colorList(char name[], int r, int g, int b) {
 	static ColorList new_colorList[100];
 	static int index = 0;
 	ColorList *n = &(new_colorList[index++]);
-	n->key = key;
-	n->l1 = l1;
-	n->a1 = a1;
-	n->b1 = b1;
+	n->name = name;
+	n->r = r;
+	n->g = g;
+	n->b = b;
 	n->next = NULL;
 	return n;
 }
 
-void insert_colorList(char *key, double l1, double a1, double b1) {
-	ColorList *new_colorList = create_new_colorList(key, l1,a1,b1);
+void insert_colorList(char *key, int r, int g, int b) {
+	ColorList *new_colorList = create_new_colorList(key, r,g,b);
 
 	if (first_node == NULL) {
 		// No nodes
